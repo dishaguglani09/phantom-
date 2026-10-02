@@ -1,0 +1,54 @@
+{
+  "scan_id": "scan-001",
+  "timestamp": "2026-10-02T15:00:00Z",
+  "changes": [
+    {
+      "object_id": "chair-001",
+      "label": "Chair",
+      "status": "moved",
+      "bounding_box": {
+        "x": 420,
+        "y": 230,
+        "width": 180,
+        "height": 220
+      },
+      "depth": 2.4,
+      "previous_position": {
+        "x": 300,
+        "y": 230
+      },
+      "timestamp": "2026-10-02T15:00:00Z"
+    },
+    {
+      "object_id": "plant-001",
+      "label": "Plant",
+      "status": "added",
+      "bounding_box": {
+        "x": 650,
+        "y": 180,
+        "width": 120,
+        "height": 200
+      },
+      "depth": 3.1,
+      "previous_position": null,
+      "timestamp": "2026-10-02T15:00:00Z"
+    },
+    {
+      "object_id": "table-001",
+      "label": "Table",
+      "status": "removed",
+      "bounding_box": {
+        "x": 100,
+        "y": 300,
+        "width": 300,
+        "height": 180
+      },
+      "depth": 2.8,
+      "previous_position": {
+        "x": 100,
+        "y": 300
+      },
+      "timestamp": "2026-10-02T15:00:00Z"
+    }
+  ]
+}
