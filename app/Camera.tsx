@@ -8,6 +8,8 @@ export default function Camera() {
 
   const [scanA, setScanA] = useState<string | null>(null);
   const [scanB, setScanB] = useState<string | null>(null);
+  const [isAnalyzing, setIsAnalyzing] = useState(false);
+  const [isComplete, setIsComplete] = useState(false);
 
   useEffect(() => {
     async function startCamera() {
@@ -61,17 +63,39 @@ export default function Camera() {
     }
   }
 
+  function analyzeScans() {
+    setIsAnalyzing(true);
+
+    // Temporary mock analysis.
+    // Later this will call the FastAPI backend.
+    setTimeout(() => {
+      setIsAnalyzing(false);
+      setIsComplete(true);
+    }, 2000);
+  }
+
+  function resetScans() {
+    setScanA(null);
+    setScanB(null);
+    setIsAnalyzing(false);
+    setIsComplete(false);
+  }
+
   const currentScan = !scanA ? "SCAN A" : "SCAN B";
 
   return (
     <div className="flex w-full max-w-2xl flex-col items-center gap-6">
 
-      {/* Current Scan */}
+      {/* Current status */}
       <p className="text-sm tracking-[0.2em] text-gray-400">
-        {scanB ? "SCAN COMPLETE" : currentScan}
+        {isAnalyzing
+          ? "ANALYZING SCANS..."
+          : isComplete
+          ? "DIFF COMPLETE"
+          : currentScan}
       </p>
 
-      {/* Camera */}
+      {/* Camera / Scan B preview */}
       <div className="aspect-video w-full overflow-hidden rounded-2xl border border-gray-700 bg-gray-950">
 
         {!scanA ? (
@@ -103,7 +127,7 @@ export default function Camera() {
       {/* Hidden canvas */}
       <canvas ref={canvasRef} className="hidden" />
 
-      {/* Capture button */}
+      {/* Capture Scan A / B */}
       {!scanB && (
         <button
           onClick={capturePhoto}
@@ -113,8 +137,42 @@ export default function Camera() {
         </button>
       )}
 
+      {/* Analyze */}
+      {scanA && scanB && !isComplete && !isAnalyzing && (
+        <button
+          onClick={analyzeScans}
+          className="rounded-xl border border-white px-8 py-4 font-semibold text-white transition hover:bg-white hover:text-black"
+        >
+          ANALYZE CHANGES
+        </button>
+      )}
+
+      {/* Analyzing */}
+      {isAnalyzing && (
+        <div className="flex items-center gap-3 text-sm text-gray-300">
+          <div className="h-3 w-3 animate-pulse rounded-full bg-white" />
+          Comparing Scan A and Scan B...
+        </div>
+      )}
+
+      {/* Complete */}
+      {isComplete && (
+        <div className="flex flex-col items-center gap-4">
+          <p className="text-sm text-green-400">
+            ✓ DIFFERENCES DETECTED
+          </p>
+
+          <button
+            onClick={resetScans}
+            className="rounded-xl bg-gray-800 px-6 py-3 text-sm text-white transition hover:bg-gray-700"
+          >
+            NEW SCAN
+          </button>
+        </div>
+      )}
+
       {/* Scan status */}
-      <div className="flex gap-4 text-sm">
+      <div className="flex gap-6 text-sm">
         <span className={scanA ? "text-green-400" : "text-gray-500"}>
           {scanA ? "✓" : "○"} Scan A
         </span>

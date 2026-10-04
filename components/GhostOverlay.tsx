@@ -21,6 +21,9 @@ type GhostOverlayProps = {
   changes: Change[];
 };
 
+const REFERENCE_WIDTH = 1000;
+const REFERENCE_HEIGHT = 600;
+
 export default function GhostOverlay({
   changes,
 }: GhostOverlayProps) {
@@ -42,24 +45,33 @@ export default function GhostOverlay({
 
   return (
     <div className="absolute inset-0 pointer-events-none">
-      {changes.map((change) => (
-        <div
-          key={change.object_id}
-          className={`absolute border-2 ${getStatusColor(
-            change.status
-          )} rounded-lg`}
-          style={{
-            left: `${change.bounding_box.x}px`,
-            top: `${change.bounding_box.y}px`,
-            width: `${change.bounding_box.width}px`,
-            height: `${change.bounding_box.height}px`,
-          }}
-        >
-          <span className="absolute -top-7 left-0 rounded bg-black/80 px-2 py-1 text-xs text-white">
-            {change.label} · {change.status}
-          </span>
-        </div>
-      ))}
+      {changes.map((change) => {
+        const box = change.bounding_box;
+
+        const left = (box.x / REFERENCE_WIDTH) * 100;
+        const top = (box.y / REFERENCE_HEIGHT) * 100;
+        const width = (box.width / REFERENCE_WIDTH) * 100;
+        const height = (box.height / REFERENCE_HEIGHT) * 100;
+
+        return (
+          <div
+            key={change.object_id}
+            className={`absolute border-2 ${getStatusColor(
+              change.status
+            )} rounded-lg`}
+            style={{
+              left: `${left}%`,
+              top: `${top}%`,
+              width: `${width}%`,
+              height: `${height}%`,
+            }}
+          >
+            <span className="absolute -top-7 left-0 rounded bg-black/80 px-2 py-1 text-xs text-white whitespace-nowrap">
+              {change.label} · {change.status}
+            </span>
+          </div>
+        );
+      })}
     </div>
   );
 }
